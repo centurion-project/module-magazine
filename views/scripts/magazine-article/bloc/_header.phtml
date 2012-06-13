@@ -1,0 +1,24 @@
+<?php $this->placeholder('sub-header')->captureStart(); ?>
+<div class="row">
+    <div class="cell-10 append-1 prepend-1 cell-last">
+        <h1 class="heading-10"><?php echo $this->magazineRow->title ?></h1>
+    </div>
+</div>
+<?php $this->placeholder('sub-header')->captureEnd(); ?>
+
+<?php $this->placeholder('sub-header-menu')->captureStart(); ?>
+<div class="row">
+    <div class="cell-12 cell-last">
+        <nav class="inlinemenu-list">
+            <ul>
+                <?php //TODO : Déplacer l'appelle dans le controller ?>
+                <li><a href="<?php echo $this->url(array(), 'ir_evenement_list') ?>"><?php echo $this->translate('Agenda') ?></a></li>
+                <?php if (null !== Magazine_Model_MagazineArticle::getLastHeadline($this->magazineRow)) : ?>
+                <li class="active"><a href="<?php echo Magazine_Model_MagazineArticle::getLastHeadline($this->magazineRow->id)->permalink ?>"><?php echo Magazine_Model_MagazineArticle::getLastHeadline($this->magazineRow->id)->article->title ?></a></li>
+                <?php endif; ?>
+                <li><a href="<?php echo $this->url(array(), 'ir_mediatheque_list') ?>"><?php echo $this->translate('Mediathèque') ?></a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<?php $this->placeholder('sub-header-menu')->captureEnd(); ?>

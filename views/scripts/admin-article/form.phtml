@@ -1,0 +1,56 @@
+<?php
+$this->gridForm()->addHeader($this->form, array(
+    'elements' => array('title')
+));
+
+$this->gridForm()->addMain($this->form, array(
+    'noFieldset' => true,
+    'elements' => array('body')
+));
+
+$this->gridForm()->addMain($this->form, array(
+    'label' => $this->translate('Main'),
+    'elements' => array('subtitle', 'citation', 'abstract', 'cover', 'picture', 'video_link', 'magazines', 'categories')
+));
+
+$this->gridForm()->addMain($this->form, array(
+	'label'	   => $this->translate('Headline'),
+    'elements' => array('childs')
+));
+
+$this->gridForm()->addMain($this->form, array(
+	'label'	   => $this->translate('SEO'),
+    'elements' => array('slug')
+));
+
+if ($this->form->getElement('newtags')) {
+$this->gridForm()->addMain($this->form, array(
+	'label'	   => $this->translate('Tags'),
+    'elements' => array('tags', 'newtags')
+));
+}
+
+$this->gridForm()->addAside($this->form, array(
+    'label' => $this->translate('Publication status'),
+    'elements' => array('is_online',
+                        'is_headline',
+                        'is_promoted',
+                        'is_article',
+                        'author_id',
+                        'moderator_id',
+                        'published_at',
+                        'is_contributed',
+                        'is_homepage'
+    )
+));
+
+$this->gridForm()->addAside($this->form, array(
+    'label' => $this->translate('Configuration'),
+    'elements' => array('has_comment',
+                        'has_twitter',
+                        'has_facebook',
+                        'has_push_social',
+                        'has_related')
+));
+
+echo $this->partial('grid/_form.phtml', $this);

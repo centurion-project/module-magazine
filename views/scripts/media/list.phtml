@@ -1,0 +1,121 @@
+<?php
+$this->placeholder('body_id')->set('tmp-magazinemedia');
+$this->InlineScript()->prependFile('/layouts/frontoffice/js/plugins/jquery.isotope.js');
+$this->InlineScript()->prependFile('/layouts/frontoffice/js/plugins/jwplayer/jwplayer.js');
+$this->InlineScript()->prependFile('/layouts/frontoffice/js/plugins/jquery.oocarousel.js');
+$this->InlineScript()->prependFile('/layouts/frontoffice/js/modules/mediatheque.js');
+$this->InlineScript()->prependFile('/layouts/frontoffice/js/modules/viewer.js');
+$this->headLink()->appendStylesheet('/layouts/frontoffice/css/modules/mediatheque.css');
+$this->headLink()->appendStylesheet('/layouts/frontoffice/css/modules/viewer.css');
+$this->headLink()->appendStylesheet('/layouts/frontoffice/css/modules/carousel.css');
+?>
+
+<?php
+//Title
+$this->headTitle($this->translate('Médiathèque'), 'PREPEND')
+    ->setSeparator(' - ');
+
+//Meta description
+$this->headMeta()->setName('description', $this->translate('Terre d\'émotions, la Vallée du Rhône en images'));
+
+//Meta keywords
+$this->headMeta()->setName('keywords', $this->translate('Vins, AOC, Côtes du Rhône, Vallée du Rhône, Mediathèque'));
+?>
+
+<?php $this->InlineScript()->captureStart(); ?>
+//_V_.options.flash.swf = "/layouts/frontoffice/js/plugins/videojs/video-js.swf";
+<?php $this->InlineScript()->captureEnd(); ?>
+
+<?php
+    // Navigation du magazine courant
+    $navigation = $this->getMagazineNavigation($this->magazineRow);
+    echo $this->partial('magazine/_navigation.phtml', array(
+        'magazineRow' => $this->magazineRow,
+        'navigation' => $navigation,
+        'url' => $this->url(array(), 'ir_mediatheque_list'),
+    ));
+?>
+
+<div id="mediatheque">
+    <div class="toolsbar">
+        <div class="float-left">
+            <ul>
+                <li><?php echo $this->translate('Thèmes'); ?></li>
+                <li class="active" ><a href="#" data-filter="*"><?php echo $this->translate('Tous'); ?></a></li>
+                <?php foreach ($this->tagRowSet as $tags): ?>
+                    <li><a href="#" data-filter=".<?php echo $tags->slug; ?>"><?php echo $tags->name; ?></a></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+        <div class="float-right">
+            <span><i></i></span>
+            <a href="#" class="drop"><?php echo $this->translate('Par date'); ?></a>
+            <ul>
+                <li><a href="#date"><?php echo $this->translate('Par date'); ?></a></li>
+                <li><a href="#views"><?php echo $this->translate('Par vues'); ?></a></li>
+            </ul>
+        </div>
+    </div>
+    <?php
+    $len = 100; // Number of items
+    foreach ($this->mediaRowSet as $k => $mediaRow) :
+        $size = rand(1,275);
+
+        if ($size > 0 && $size <= 150){ $size = 1; }
+        else if ($size > 150 && $size <= 250) { $size = ($size <= 200) ? 2 : 4; }
+        else if ($size > 250 && $size <= 275){ $size = 3; }
+        else { $size = 1; }
+
+        $tags = array();
+        foreach ($mediaRow->tags as $tagRow){
+            $tags[] = $tagRow->slug;
+        }
+
+        $tag = implode(' ', $tags);
+
+        // TImestamp test
+        $timestamp = $mediaRow->getDateObjectBy('created_at')->getTimestamp();
+
+        // Views test
+        $views = 10;
+        if(rand(1,2) == 1)
+            $views = 100;
+
+        $submit = false;
+        if($k%30 == 0) {
+            $submit = true;
+            $size = 2;
+            $timestamp = $views = $tag = null;
+        }
+        ?>
+        <div class="item <?php echo $tag?> size-<?php echo $size;?>" data-album-id="<?php echo $mediaRow->id; ?>" data-timestamp="<?php echo $timestamp?>" data-views="<?php echo $views?>">
+            <?php
+            // Temporaire
+            if($size == 1){
+                echo '<img src="' . $mediaRow->media->getStaticUrl(array('cropcenterresize' => array('height' => 97, 'width' => 140))). '" />';
+            } else if($size == 2){
+                echo '<img src="' . $mediaRow->media->getStaticUrl(array('cropcenterresize' => array('height' => 198, 'width' => 284))). '" />';
+            } else if($size == 3){
+                echo '<img src="' . $mediaRow->media->getStaticUrl(array('cropcenterresize' => array('height' => 299, 'width' => 428))). '" />';
+            } else if($size == 4){
+                echo '<img src="' . $mediaRow->media->getStaticUrl(array('cropcenterresize' => array('height' => 299, 'width' => 284))). '" />';
+            }
+            ?>
+            <div class="thumb-info">
+                <div>
+                    <h4><?php echo $mediaRow->title; ?></h4>
+                    <span><?php echo $mediaRow->getDateObjectBy('created_at')->get(Zend_Date::DATE_MEDIUM); ?></span>
+                </div>
+            </div>
+        </div>
+        <?php if (true == $submit) { ?>
+            <div class="item size-2 item-submit" data-album-id="" data-timestamp="" data-views="">
+                <a href="<?php echo $this->url(array(), 'ir_share_form'); ?>">
+                    <h4 class="heading-5"><?php echo $this->translate('Ajouter vos photos et vidéos'); ?></h4>
+                    <p class="teasing-1"><?php echo $this->translate('de vos meilleurs moments<br>dans la vallée du rhône !'); ?></p>
+                </a>
+            </div>
+        <?php } ?>
+
+        <?php endforeach;  ?>
+</div>

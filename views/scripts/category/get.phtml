@@ -1,0 +1,191 @@
+<?php
+$this->placeholder('body_id')->set('tmp-magazine-home-category');
+$this->headLink()->appendStylesheet('/layouts/frontoffice/css/modules/carousel.css');
+$this->InlineScript()->prependFile('/layouts/frontoffice/js/modules/tabs.js');
+$this->InlineScript()->prependFile('/layouts/frontoffice/js/plugins/jquery.oocarousel.js');
+?>
+
+<?php
+    // Navigation du magazine courant
+    $navigation = $this->getMagazineNavigation($this->magazineRow);
+    echo $this->partial('magazine/_navigation.phtml', array(
+        'magazineRow' => $this->magazineRow,
+        'navigation' => $navigation,
+        'url' => $this->categoryRow->permalink,
+    ));
+?>
+
+<?php
+// Découpe du rowset
+// firstGroup = 3 premiers article mis en avant
+// secondGroup = 3 articles à la une
+$firstGroup = $this->rowsetSlice($this->promotedMagazineArticleRowset, 0, 3, false);
+//$secondGroup = $this->rowsetSlice($this->promotedMagazineArticleRowset, 3, 6, false);
+$thirdGroup = $this->rowsetSlice($this->promotedMagazineArticleRowset, 3, 9, false);
+?>
+
+<div class="row">
+    <h2 class="heading-7"><?php echo $this->categoryRow->name; ?></h2>
+    <ul class="clearfix list list-articles">
+        <?php foreach ($firstGroup as $key => $magazineArticleRow) : ?>
+            <?php if ($key == 0) : ?>
+            <li class="cell cell-8 box-article box-article-highlight">
+                <figure>
+
+                    <img src="<?php echo $magazineArticleRow->article->getCoverOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => 620, 'height' => 371))) ?>" width="620" height="371" class="picture" />
+                    <figcaption>
+                        <h3 class="heading-6"><?php echo $magazineArticleRow->article->title ?></h3>
+<!--                        <span class="detail">-->
+<!--                            --><?php //if (count($magazineArticleRow->article->tags[0]) > 0) ?>
+<!--                                <span class="label">--><?php //echo $magazineArticleRow->article->tags[0] ?><!--</span>-->
+<!--                            --><?php //?>
+<!--                        </span>-->
+                        <a href="<?php echo $magazineArticleRow->permalink ?>"><span class="icon icon-pager-next"></span></a>
+
+                    </figcaption>
+                </figure>
+            </li>
+            <?php else : ?>
+            <li class="cell cell-4 cell-last box-article">
+                <a class="box-article" href="<?php echo $magazineArticleRow->permalink ?>">
+                    <figure>
+                        <img src="<?php echo $magazineArticleRow->article->getCoverOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => 300, 'height' => 176))) ?>" width="300" height="176" class="picture" />
+                        <figcaption>
+                            <h3 class="heading-6"><?php echo $magazineArticleRow->article->title ?></h3>
+<!--                            <span class="detail">-->
+<!--                                --><?php //if (count($magazineArticleRow->article->tags[0]) > 0) ?>
+<!--                                    <span class="label">--><?php //echo $magazineArticleRow->article->tags[0] ?><!--</span>-->
+<!--                                --><?php //?>
+<!--                            </span>-->
+                        </figcaption>
+                    </figure>
+                </a>
+
+
+
+<!--                <a class="box-article" href="--><?php //echo $magazineArticleRow->permalink ?><!--">-->
+<!--                    <img src="--><?php //echo $magazineArticleRow->article->getCoverOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => 300, 'height' => 176))) ?><!--" width="300" height="176" class="picture" />-->
+<!--                    <div class="entry">-->
+<!--                        --><?php //if (count($magazineArticleRow->article->tags[0]) > 0) ?>
+<!--                        <span class="label">--><?php //echo $magazineArticleRow->article->tags[0] ?><!--</span>-->
+<!--                        --><?php //?>
+<!--                        <h3 class="heading-1">--><?php //echo $magazineArticleRow->article->title ?><!--</h3>-->
+<!--                    </div>-->
+<!--                </a>-->
+            </li>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </ul>
+    <div class="box-hot-news">
+        <h2 class="heading-4"><?php echo $this->translate('A la une') ?></h2>
+        <div id="carousel-hot-news" class="carousel carousel-hot-news">
+            <div class="carousel-view">
+                <ul>
+                    <?php foreach ($this->fiveMagazineArticleRowset as $key => $magazineArticleRow) : ?>
+                    <li <?php echo ($key == 0) ? 'class="active"':''; ?>><a class="heading-5" href="<?php echo $magazineArticleRow->permalink ?>"><?php echo $this->smartTextCrop($magazineArticleRow->article->title, 55) ?> <img src="/layouts/frontoffice/images/px.png" class="icon icon-arrow-next" height="16" width="16"></a></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="cell cell-8">
+        <h2 class="heading-6 heading-solid-bottom align-center"><?php echo $this->translate('Les derniers articles') ?></h2>
+        <ul class="row lsit list-lastarticles">
+            <?php foreach ($thirdGroup as $key => $magazineArticleRow) : ?>
+            <li class="cell-4 <?php echo (($key + 1) % 2 == 0) ? 'cell-last':''; ?> box-lastarticles">
+                <a href="<?php echo $magazineArticleRow->permalink ?>"><h3 class="heading-3"><?php echo $magazineArticleRow->article->title ?></h3></a>
+                <span class="detail"><a href="#"><?php echo $magazineArticleRow->article->author->fullname ?></a> | <?php echo $magazineArticleRow->article->getDateObjectByPublished_at()->get('dd/MM/yy') ?></span>
+                <a href="<?php echo $magazineArticleRow->permalink ?>">
+                    <figure class="box-illus">
+                        <img src="<?php echo $magazineArticleRow->article->getCoverOrPx()->getStaticUrl(
+                            array(
+                                'cropcenterresize' => array(
+                                    'width' => '300',
+                                    'height' => '152',
+                                )
+                            )
+                        ); ?>" class="picture" width="300" height="152" />
+                        <?php if (count($magazineArticleRow->article->tags[0]) > 0) ?>
+                        <figcaption class="label"><?php echo $magazineArticleRow->article->tags[0] ?></figcaption>
+                        <?php ?>
+                    </figure>
+                </a>
+                <p><?php echo $this->smartTextCrop($this->getAbstract($magazineArticleRow->article),150); ?>
+                    <a href="<?php echo $magazineArticleRow->permalink ?>"><span class="dotdotdot">•••</span></a></p>
+            </li>
+            <?php endforeach; ?>
+        </ul>
+        <!--<div class="btn-wrapper-big">
+            <a href="#" class="btn">
+                Plus d'articles
+                <img src="/layouts/frontoffice/images/px.png" class="icon icon-arrow-next" height="16" width="16">
+            </a>
+        </div>-->
+    </div>
+    <div class="cell cell-4 cell-last">
+        <section class="sidebar">
+            <?php if (null !== $this->lastHeadlineRow) : ?>
+            <div class="box-highlight-folder">
+                <h3 class="heading-6 align-center"><?php echo $this->translate('Dossiers') ?></h3>
+                <a href="<?php echo $this->lastHeadlineRow->permalink; ?>" class="box-illus">
+                    <figure>
+                        <img src="<?php echo $this->lastHeadlineRow->article->getPictureOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => '197', 'height' => '240'))) ?>" width="197" height="240" class="picture" />
+                        <figcaption>
+                            <?php echo $this->lastHeadlineRow->article->title ?>
+                        </figcaption>
+                    </figure>
+                </a>
+
+                <a href="<?php echo $this->lastHeadlineRow->permalink; ?>" class="btn btn-lower">
+                    <?php echo $this->translate('Voir le dossier') ?>
+                    <img src="/layouts/frontoffice/images/px.png" class="icon icon-arrow-next" height="16" width="16">
+                </a>
+            </div>
+            <?php endif; ?>
+            <?php if (count($this->articleMostReadedRowset) > 0) : ?>
+            <div class="box-news">
+                <h3 class="heading-6 heading-solid-bottom align-center"><?php echo $this->translate('Les plus lus') ?></h3>
+                <ul class="news-list">
+                    <?php foreach ($this->articleMostReadedRowset as $articleMostReadedRow) : ?>
+                    <li>
+                        <a href="<?php echo $articleMostReadedRow->permalink ?>">
+                            <img src="<?php echo $articleMostReadedRow->article->getCoverOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => '60', 'height' => '60'))) ?>" height="60" width="60" class="picture media-illus">
+                            <div class="media-inner">
+                                <strong><?php echo $articleMostReadedRow->article->title ?></strong>
+                                <small><?php echo $articleMostReadedRow->article->getDateObjectBy('published_at')->get('dd.MM.YYY'); ?></small>
+                            </div>
+                        </a>
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <?php endif; ?>
+            <!--<a href="#" class="btn btn-red btn-large btn-newsletter"><span>News</span>letter<img src="/layouts/frontoffice/images/px.png" class="icon icon-arrow-next" height="16" width="16">-->
+            </a>
+        </section>
+    </div>
+</div>
+
+<?php if (isset($this->eventRowset) && 0 < count($this->eventRowset)) : ?>
+<?php $this->placeholder('sub-footer')->captureStart(); ?>
+<div class="row">
+    <div class="cell-12">
+        <h2 class="heading-4 heading-dotted-bottom"><?php echo $this->translate('À ne pas manquer') ?></h2>
+    </div>
+</div>
+<div class="row container-5 press-grid">
+    <?php foreach($this->eventRowset as $event) : ?>
+    <a href="<?php echo $event->permalink ?>" class="cell-1">
+        <img src="<?php echo $event->getCoverOrDefaultcoverOrPx()->getStaticUrl(array('cropcenterresize'=>array('width'=>168,'height'=>110))) ?>"
+             class="picture"
+             height="110"
+             width="168" />
+        <h4 class="detail"><?php echo $event->getDateObjectByStartAt()->get(Zend_Date::DATE_LONG) ?></h4>
+        <h3 class="heading-8"><?php echo $event->name ?></h3>
+        <p><?php echo $event->subtitle ?></p>
+    </a>
+    <?php endforeach ?>
+</div>
+<?php $this->placeholder('sub-footer')->captureEnd(); ?>
+<?php endif; ?>

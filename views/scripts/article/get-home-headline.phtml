@@ -1,0 +1,79 @@
+<?php
+    $this->placeholder('body_id')->set('tmp-magazinemonth');
+?>
+
+<?php echo $this->partial('article/bloc/_header.phtml', array('magazineRow' => $this->magazineRow)) ?>
+
+<section class="monthbg row">
+    <div class="row box-month">
+        <div class="cell-12">
+            <h3><?php echo $this->translate('Dossier du Mois') ?></h3>
+            <div class="box-illus">
+                <img src="<?php echo $this->headlineRow->getCoverOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => 900, 'height' => 300))) ?>" class="picture">
+                <div class="entry">
+                    <h1 class="heading-7"><?php echo $this->headlineRow->title ?></h1>
+                    <a href="<?php echo $this->makeLink(array('headline-slug' => $this->headlineRow->slug, 'object' => $this->articleLeft[0]), 'magazine_headline_get_child') ?>" class="btn btn-push btn-white">
+                        <?php echo $this->translate('Lire le dossier') ?>
+                        <img src="/layouts/frontoffice/images/px.png" class="icon icon-arrow-next" height="16" width="16" />
+                    </a>
+                </div>
+            </div>
+            <p class="teasing-2"><?php echo $this->headlineRow->subtitle ?></p>
+        </div>
+    </div>
+    <div class="row sidebar-large sidebar-large-cell-4">
+        <div class="cell-8">
+            <div class="entry">
+                <ol class="box-media-list">
+                    <?php foreach ($this->articleLeft as $key => $articleRow) : ?>
+                    <?php if (0 == $key) : ?>
+                    <li>
+                        <div class="box-media">
+                            <div class="block">
+                                <h3 class="heading-3"><?php echo $articleRow->title ?></h3>
+                                <span class="detail"><a href="<?php echo $articleRow->author->permalink ?>"><?php echo $articleRow->author->fullname ?></a> | 15/12/11</span>
+                                <img src="<?php echo $articleRow->getCoverOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => 620, 'height' => 240))) ?>" alt="" width="620" height="240" class="picture">
+                                <p><?php echo $this->getAbstract($articleRow) ?> <span class="dotdotdot">•••</span> </p>
+                                <a class="more" href="<?php echo $this->makeLink(array('headline-slug' => $this->headlineRow->slug, 'object' => $articleRow), 'magazine_headline_get_child') ?>"><?php echo $this->translate('Lire la suite') ?> <img src="/layouts/frontoffice/images/px.png" width="16" height="16" class="icon icon-more"></a>
+                            </div>
+                        </div>
+                    </li>
+                    <?php else : ?>
+                    <li>
+                        <div class="box-media">
+                            <a href="<?php echo $this->makeLink(array('headline-slug' => $this->headlineRow->slug, 'object' => $articleRow), 'magazine_headline_get_child') ?>" class="media">
+                                <img src="<?php echo $articleRow->getCoverOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => 160, 'height' => 110))) ?>e" width="160" height="110" class="picture">
+                            </a>
+                            <div class="block">
+                                <h3 class="heading-3"><?php echo $articleRow->title ?></h3>
+                                <span class="detail"><a href="<?php echo $articleRow->author->permalink ?>"><?php echo $articleRow->author->fullname ?>n</a> | 15/12/11</span>
+                                <p><?php echo $this->getAbstract($articleRow) ?> <span class="dotdotdot">•••</span> </p>
+                                <a class="more" href="<?php echo $this->makeLink(array('headline-slug' => $this->headlineRow->slug, 'object' => $articleRow), 'magazine_headline_get_child') ?>"><?php echo $this->translate('Lire la suite') ?> <img src="/layouts/frontoffice/images/px.png" width="16" height="16" class="icon icon-more"></a>
+                            </div>
+                        </div>
+                    </li>
+                    <?php endif; ?>
+                    <?php endforeach; ?>
+                </ol>
+            </div>
+        </div>
+        <div class="cell-4 cell-last">
+            <aside class="sidebar">
+                <ol class="box-media-list">
+                    <?php foreach ($this->articleRight as $key => $articleRow) : ?>
+                    <li>
+                        <div class="box-media">
+                            <div class="block">
+                                <h3 class="heading-3"><?php echo $articleRow->title ?></h3>
+                                <span class="detail"><a href="<?php echo $articleRow->author->permalink ?>"><?php echo $articleRow->author->fullname ?></a> | 15/12/11</span>
+                                <img src="<?php echo $articleRow->getCoverOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => 280, 'height' => 150))) ?>" alt="" width="280" height="150" class="picture">
+                                <p><?php echo $this->getAbstract($articleRow) ?> <span class="dotdotdot">•••</span> </p>
+                            </div>
+                        </div>
+                    </li>
+                    <?php endforeach; ?>
+                </ol>
+            </aside>
+        </div>
+    </div>
+</section>

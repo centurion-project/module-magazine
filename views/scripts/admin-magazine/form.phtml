@@ -1,0 +1,17 @@
+<?php
+
+$this->gridForm()->addHeader($this->form, array(
+    'elements' => array('title')
+));
+
+$this->gridForm()->addMain($this->form, array(
+    'label' => $this->translate('Main'),
+    'elements' => array('subtitle', 'logo')
+));
+
+$this->gridForm()->addMain($this->form, array(
+	'label'	   => $this->translate('SEO'),
+    'elements' => array('slug')
+));
+
+echo $this->partial('grid/_form.phtml', $this);

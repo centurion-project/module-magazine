@@ -1,0 +1,25 @@
+<section>
+    <div class="grid section-home grid-w204-g20 grid-mag">
+        <div class="cell section-title">
+            <h2 class="heading-2-mag"><?php echo $this->translate('Mag'); ?> <span class="icon icon-plus-middle"></span></h2>
+            <p><?php echo $this->translate('les sujets qui nous passionnent'); ?></p>
+            <?php /*?><a href="<?php echo $this->url(array(), 'octave_agency'); ?>" class="see-more"><?php echo $this->translate('Voir tous les articles'); ?> <span class="icon icon-arrow"></span></a><?php*/ ?>
+        </div>
+
+        <div class="article first cell cell-3 cell-last">
+            <?php 
+            $latestPost = $this->getLatestPosts(array(), 3);
+            $maxKey = count($latestPost) - 1;
+            foreach ($latestPost as $key => $post):
+            ?>
+            <div class="cell<?php if ($key == $maxKey) { echo ' cell-last'; } ?>">
+                <article>
+                    <h2 class="heading-2"><a href="<?php echo $post->permalink; ?>"><?php echo $post->title;?></a></h2>
+                    <div class="infos"><time pubdate datetime="<?php $dateString = $post->getDateObjectBy('published_at')->get('dd.MM.yyy'); echo $dateString; ?>"><?php echo $dateString; ?></time></div>
+                    <p class=""><?php echo $post->abstract; ?></p>
+                </article>
+            </div>
+            <?php endforeach; ?>
+        </div><div class="clear line"></div>
+    </div>
+</section>

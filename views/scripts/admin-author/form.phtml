@@ -1,0 +1,27 @@
+<?php
+
+$this->gridForm()->addHeader($this->form, array(
+    'elements' => array('lastname', 'firstname')
+));
+
+$this->gridForm()->addMain($this->form, array(
+    'noFieldset' => true,
+    'elements' => array('body')
+));
+
+$this->gridForm()->addMain($this->form, array(
+	'label'	   => $this->translate('Properties'),
+    'elements' => array('abstract', 'url_twitter', 'url_facebook', 'url_googleplus',  'url_blog', 'user', 'picture')
+));
+
+$this->gridForm()->addMain($this->form, array(
+	'label'	   => $this->translate('SEO'),
+    'elements' => array('slug')
+));
+
+$this->gridForm()->addASide($this->form, array(
+    'label'	   => $this->translate('Type of author'),
+    'elements' => array('is_contributor')
+));
+
+echo $this->partial('grid/_form.phtml', $this);

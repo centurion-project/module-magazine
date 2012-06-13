@@ -1,0 +1,21 @@
+<div class="related-list">
+    <ul>
+        <li class="cover">
+            <h3><?php echo $this->translate('Dossier du mois') ?></h3>
+            <span><?php echo $this->headlineRow->title ?></span>
+            <img src="<?php echo $this->headlineRow->getPictureOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => 190, 'height' => 100))) ?>" width="190" height="100" sclass="picture" />
+        </li>
+        <?php foreach ($this->childRowset as $key => $childRow) : ?>
+        <?php if ($this->articleRow->id === $childRow->id) : ?>
+            <li class="active related-with-picture">
+                <a href="<?php echo $this->makeLink(array('headline-slug' => $this->headlineRow->slug, 'object' => $childRow), 'magazine_headline_get_child') ?>">
+                    <img src="<?php echo $childRow->getCoverOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => 60, 'height' => 60))) ?>" height="60" width="60" class="picture" />
+                    <?php echo $childRow->title ?>
+                </a>
+            </li>
+        <?php else : ?>
+            <li><a href="<?php echo $this->makeLink(array('headline-slug' => $this->headlineRow->slug, 'object' => $childRow), 'magazine_headline_get_child') ?>"><?php echo $childRow->title ?></a></li>
+        <?php endif; ?>
+        <?php endforeach; ?>
+    </ul>
+</div>

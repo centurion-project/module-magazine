@@ -1,0 +1,196 @@
+<?php
+    $this->placeholder('body_id')->set('tmp-magazinehome');
+    $this->InlineScript()->prependFile('/layouts/frontoffice/js/plugins/jquery.oocarousel.js');
+    $this->headLink()->appendStylesheet('/layouts/frontoffice/css/modules/carousel.css');
+    $this->InlineScript()->prependFile('/layouts/frontoffice/js/modules/grayscalehover.js');
+?>
+
+<?php echo $this->partial('article/bloc/_header.phtml', array('magazineRow' => $this->magazineRow)) ?>
+
+<?php $this->placeholder('top-content')->captureStart(); ?>
+
+<div class="row">
+    <div class="carousel-magazinehome">
+        <div class="carousel-view">
+            <ul>
+                <?php foreach ($this->articleSliderRowset as $articleSliderRow) :?>
+                <li>
+                    <img src="<?php echo $articleSliderRow->getCoverOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => 940, 'height' => 390))) ?>" width="940" height="390" class="picture">
+                    <div class="entry">
+                        <span class="label">Paroles du vignoble</span>
+                        <h2 class="heading-1"><?php echo $articleSliderRow->title ?></h2>
+                        <p class="teasing-2"><?php echo $articleSliderRow->subtitle ?></p>
+                        <a href="<?php echo $this->makeLink(array('object' => $articleSliderRow), 'magazine_article_get') ?>" class="btn btn-white">
+                            <?php echo $this->translate('Lire l\'article') ?>
+                            <img src="/layouts/frontoffice/images/px.png" class="icon icon-arrow-next" height="16" width="16">
+                        </a>
+                    </div>
+                </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="cell-8">
+        <h2 class="heading-6 heading-solid-bottom align-center"><?php echo $this->translate('Les derniers articles') ?></h2>
+
+        <div class="row">
+            <?php foreach ($this->articleLastRowset as $key => $articleLastRow) : ?>
+            <div class="cell-4 box-lastarticles <?php if ($key == count($this->articleLastRowset) - 1) echo 'cell-last' ?>">
+                <a href="<?php echo $this->makeLink(array('object' => $articleLastRow), 'magazine_article_get'); ?>"><h3 class="heading-3"><?php echo $articleLastRow->title ?></h3></a>
+                <span class="detail">
+                    <a href="<?php echo $articleLastRow->author->permalink; ?>"><?php echo $articleLastRow->author->fullname; ?></a> |
+                    <?php
+                        $date = new Zend_Date($articleLastRow->published_at);
+                        echo str_replace('.', '/', $date->get(Zend_Date::DATE_SHORT));
+                    ?>
+                </span>
+                <a href="<?php echo $this->makeLink(array('object' => $articleLastRow), 'magazine_article_get'); ?>">
+                    <figure class="box-illus">
+                        <img src="<?php echo $articleLastRow->getCoverOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => '300', 'height' => '152'))) ?>" class="picture" width="300" height="152" />
+                    </figure>
+                </a>
+                <p><?php echo $this->getAbstract($articleLastRow) ?>
+                <a href="<?php echo $this->makeLink(array('object' => $articleLastRow), 'magazine_article_get'); ?>"><span class="dotdotdot">•••</span></a></p>
+            </div>
+            <?php endforeach; ?>
+        </div>
+
+    </div>
+    <div class="cell-4 cell-last">
+        <section class="sidebar">
+            <?php if(isset($this->lastHeadlineRow)) :  ?>
+            <div class="box-highlight-folder">
+                <h3 class="heading-6 align-center"><?php echo $this->translate('Dossiers') ?></h3>
+                <a href="<?php echo $this->makeLink(array('object' => $this->lastHeadlineRow), 'magazine_headline_get_parent') ?>" class="box-illus">
+                    <figure>
+                        <img src="<?php echo $this->lastHeadlineRow->getCoverOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => '197', 'height' => '240'))) ?>" width="197" height="240" class="picture" />
+                        <figcaption>
+                            <?php echo $this->lastHeadlineRow->title ?>
+                        </figcaption>
+                    </figure>
+                </a>
+
+                <a href="<?php echo $this->makeLink(array('object' => $this->lastHeadlineRow), 'magazine_headline_get_parent') ?>" class="btn btn-lower">
+                    <?php echo $this->translate('Voir ce dossier') ?>
+                    <img src="/layouts/frontoffice/images/px.png" class="icon icon-arrow-next" height="16" width="16">
+                </a>
+            </div>
+            <?php endif; ?>
+        </section>
+    </div>
+</div>
+
+<?php $this->placeholder('top-content')->captureEnd(); ?>
+
+<div class="row sidebar-px">
+    <div class="cell-4">
+
+        <div class="box-randomquote">
+            <blockquote><?php echo $this->verbatimRow->text ?></blockquote>
+            <span class="detail"><?php echo $this->translate('Dans <a href="%s">%s, %s</a>', $this->verbatimRow->user->getProfile()->permalink, $this->verbatimRow->user->getProfile()->nickname, $this->verbatimRow->title) ?></span>
+        </div>
+
+        <h3 class="heading-6 heading-inlinestroke"><span><?php echo $this->translate('Médiathèque') ?></span></h3>
+
+        <a href="<?php echo $this->url(array(), 'ir_mediatheque_list') ?>">
+            <figure class="box-randommedia">
+                <img src="<?php echo $this->mediaRow->getMediaOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => '300', 'height' => '240'))) ?>" width="300" height="240" class="picture" />
+                <figcaption>
+                    <span class="icon icon-arrow-next"></span>
+                    <h5 class="heading-8"><?php echo $this->mediaRow->title ?></h5>
+                    <span class="detail">
+                        <?php
+                            $date = new Zend_Date($this->mediaRow->created_at);
+                            echo $date->get(Zend_Date::DATE_LONG);
+                        ?>
+                    </span>
+                </figcaption>
+            </figure>
+        </a>
+
+    </div>
+    <div class="cell-8 cell-last">
+        <h3 class="heading-6 heading-inlinestroke"><span><?php echo $this->translate('Actualités') ?></span></h3>
+        <ol class="box-media-list">
+            <?php foreach ($this->articleNewsRowset as $articleNewsRow) : ?>
+            <li>
+                <div class="box-media">
+                    <a href="<?php echo $this->makeLink(array('object' => $articleNewsRow), 'magazine_article_get') ?>" class="media">
+                        <img src="<?php echo $articleNewsRow->getCoverOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => '160', 'height' => '110'))); ?>" width="160" height="110" class="picture">
+                    </a>
+                    <div class="block">
+                        <a href="<?php echo $this->makeLink(array('object' => $articleNewsRow), 'magazine_article_get') ?>"><h3 class="heading-3"><?php echo $articleNewsRow->title ?></h3></a>
+                        <span class="detail">
+                            <a href="<?php echo $articleNewsRow->author->permalink ?>"><?php echo $articleNewsRow->author->fullname ?></a> |
+                            <?php
+                                $date = new Zend_Date($articleNewsRow->published_at);
+                                echo $this->translate('Publié le %s', str_replace('.', '/', $date->get(Zend_Date::DATE_SHORT)))
+                            ?>
+                        </span>
+                        <p><?php echo $this->getAbstract($articleNewsRow) ?><span class="dotdotdot">•••</span> </p>
+                    </div>
+                </div>
+            </li>
+            <?php endforeach; ?>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+    <h3 class="heading-6 heading-inlinestroke"><span><?php echo $this->translate('Ils parlent de la région') ?></span></h3>
+
+    <div class="cell-4">
+        <h4 class="teasing-1"><?php echo $this->translate('Nos ambassadeurs') ?></h4>
+        <div class="box-bloggers">
+            <?php foreach ($this->ambassadorRowset as $ambassadorRow) : ?>
+            <a href="<?php echo $ambassadorRow->permalink ?>">
+                <span class="icon icon-flags icon-es"></span><span class="mini-bubble">
+                <?php echo $this->translate('Voir<br>sa fiche') ?></span>
+                <?php $avatarSrc = $ambassadorRow->getAvatarOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => '99', 'height' => '99'))) ?>
+                <img src="<?php echo $avatarSrc ?>" data-hover="<?php echo $avatarSrc ?>" class="<?php echo $avatarSrc ?>" alt="<?php echo $ambassadorRow->nickname ?>" width="99" height="99" data-base="<?php echo $avatarSrc ?>">
+            </a>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <div class="cell-4">
+        <h4 class="teasing-1"><?php echo $this->translate('Nos blogueurs') ?></h4>
+        <div class="box-bloggers">
+            <?php foreach ($this->bloggerRowset as $bloggerRow) : ?>
+            <a href="<?php echo $bloggerRow->permalink ?>"><span class="mini-bubble">
+                <?php echo $this->translate('Voir<br>sa fiche') ?></span>
+                <?php $avatarSrc = $bloggerRow->getAvatarOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => '99', 'height' => '99'))) ?>
+                <img src="<?php echo $avatarSrc ?>" data-hover="<?php echo $avatarSrc ?>" class="picture grayscale-hover" alt="<?php echo $bloggerRow->nickname ?>" width="99" height="99" data-base="<?php echo $avatarSrc ?>">
+            </a>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <div class="cell-4 cell-last">
+        <h4 class="teasing-1"><?php echo $this->translate('Nos vignerons') ?></h4>
+        <div class="box-bloggers">
+            <?php foreach ($this->winemakerRowset as $winemakerRow) : ?>
+            <a href="<?php echo $winemakerRow->permalink ?>"><span class="mini-bubble">
+                <?php echo $this->translate('Voir<br>sa fiche') ?></span>
+                <?php $avatarSrc = $winemakerRow->getAvatarOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => '99', 'height' => '99'))) ?>
+                <img src="<?php echo $avatarSrc ?>" data-hover="<?php echo $avatarSrc ?>" class="picture grayscale-hover" alt="<?php echo $winemakerRow->nickname ?>" width="99" height="99" data-base="<?php echo $avatarSrc ?>">
+            </a>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+        <div class="box-andyou">
+        <p class="teasing-4"><?php echo $this->translate('Comme eux, partagez vos coups de coeur de la région') ?></p>
+        <a href="<?php echo $this->url(array(), 'ir_share_form') ?>" class="btn btn-push">
+            <?php echo $this->translate('Je contribue') ?>
+            <img src="/layouts/frontoffice/images/px.png" class="icon icon-arrow-next" height="16" width="16">
+        </a>
+    </div>
+</div>
+
+
+
+

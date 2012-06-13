@@ -1,0 +1,84 @@
+<?php
+    $form = $this->element;
+    $baseUrl = $this->baseUrl();
+
+    $options = $form->getElement($form->getElementName())->getValue();
+    $name = $form->getElement($form->getElementName())->getName();
+    $array_name = $name.'['.$name.'][]';
+?>
+
+<?php $this->headScript()->captureStart(); ?>
+$(function() {
+// autocomplete
+var input = $(".field-search-autocomplete input").CUI("autocomplete", {
+    'source' : '<?php echo $this->url(array(
+        'module'        => 'magazine',
+        'controller'    => Zend_Controller_Front::getInstance()->getRequest()->getControllerName(),
+        'action'        => 'json-autocomplete'
+    )) ?>',
+     'select' : function(event, rws){
+          // create htmlitem
+          var itemElem = $('<div />', {
+              'class' : 'field-wrapper field-item-wrapper field-preview-wrapper'
+          });
+
+          var checkbox = $('<input />').attr({
+              'type'  : 'checkbox',
+              'checked' : "checked",
+              // TODO generate this name from the params we get
+              'name'  : '<?php echo $array_name; ?>',
+              'value' : rws.item.id,
+              'class' : 'field-checkbox',
+          });
+
+          var pic = $('<img />').attr({
+            class: 'picture',
+            height: 40,
+            width: 40,
+            src: rws.item.pic
+          });
+
+          var titleElem = $('<div />', {
+              'class' : 'title'
+          }).text(rws.item.label);
+
+          itemElem.append(checkbox, pic, titleElem);
+          //appendto dom
+          $(this).parent().next().prepend(itemElem);
+     },
+     open: function(event, ui) { 
+            var widget = $(this).autocomplete('widget');    
+            
+            if ( !widget.hasClass("ui-autocomplete-search") ){
+                 widget.addClass("ui-autocomplete-search");
+            }
+            
+            widget.css( 'width', $(this).innerWidth());
+        }
+});
+//sortable
+$(".field-search-autocomplete input").parent().next().CUI('sortable', { items: '.field-item-wrapper', placeholder: 'ui-state-highlight'});
+})
+<?php $this->headScript()->captureEnd(); ?>
+
+<div class="form-item">
+    
+    <label for="<?php echo $name ?>"><?php echo $form->getElement($name)->getLabel() ?></label>
+    <div class="field-wrapper field-search-autocomplete"> 
+        <input class="field-text" name="<?php echo $name ?>search" id="<?php echo $name ?>search" />
+        <span class="ui-icon ui-icon-search"></span> 
+        <p class="field-description"><?php echo $form->getDescription() ?></p> 
+    </div> 
+    <div class="fieldset item-order">
+        <?php foreach($form->getArticleAllowed() as $key => $row) : ?>
+            <div class="field-wrapper field-item-wrapper field-preview-wrapper"> 
+                <input id="<?php echo $name . '-' . $key ?>" type="checkbox" checked="checked" value="<?php echo $row->id ?>" class="field-checkbox" name="<?php echo $array_name ?>" />
+                <?php echo $row->title ?>
+                <img class="picture" src="<?php echo $row->getMediaOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => 40, 'height' => 40))) ?>" height="40" width="40"/>
+                <div class="title description"></div>
+                <div class="clear"></div>
+            </div> 
+        <?php endforeach ?>
+    </div>
+    <div class="clear"></div>
+</div> 

@@ -1,0 +1,188 @@
+<?php
+$this->placeholder('body_id')->set('tmp-magazine');
+$this->placeholder('body_class')->set('tmp-sidebar');
+?>
+
+<?php echo $this->partial('article/bloc/_header.phtml', array('magazineRow' => $this->magazineRow)) ?>
+
+<div class="row">
+    <div class="cell-12">
+        <header class="article-header">
+            <h1 class="heading-2"><?php echo $this->articleRow->title ?></h1>
+            <aside>
+                <img src="<?php echo $this->articleRow->author->getPictureOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => 28, 'height' => 28))) ?>" class="picture float-left" width="28" height="28" />
+                <?php echo $this->translate('%s par <a href="%s">%s</a>', $this->articleRow->published_at, $this->articleRow->author->permalink, $this->articleRow->author->fullname) ?>
+            </aside>
+        </header>
+    </div>
+</div>
+<div class="row">
+<div class="cell-9">
+    <article class="article">
+        <figure>
+            <img src="http://lorempixel.com/672/336/food/" class="picture" height="336" width="672" />
+            <figcaption><?php echo $this->articleRow->subtitle ?>.</figcaption>
+        </figure>
+        <div class="row">
+            <div class="cell-8 prepend-1 entry">
+
+                <div class="share">
+                    <ul>
+                        <li><a href="#"><span class="icon icon-share-google"></span></a></li>
+                        <li><a href="#"><span class="icon icon-share-facebook"></span></a></li>
+                        <li><a href="#"><span class="icon icon-share-twitter"></span></a></li>
+                    </ul>
+                </div>
+
+                <hr/>
+
+                <?php echo $this->articleRow->body ?>
+
+            </div> <!-- /.entry -->
+        </div> <!-- /.row -->
+        <aside>
+
+            <div class="tags">
+                <h4 class="heading-3"><?php echo $this->translate('Tags') ?></h4>
+                <ul class="tag-list">
+                    <?php foreach ($this->tagRowset as $tagRow) : ?>
+                    <li><a href="<?php echo $this->url(array('slug' => $tagRow->slug), 'magazine_article_tag') ?>"><?php echo $tagRow->name ?></a></li>
+                    <?php endforeach ; ?>
+                </ul>
+            </div>  <!-- /.tag -->
+
+            <div class="author">
+                <div class="author-illus float-left">
+                    <a href="<?php echo $this->articleRow->author->permalink ?>">
+                        <img src="<?php echo $this->articleRow->author->getPictureOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => 80, 'height' => 80))) ?>" alt="<?php echo $this->articleRow->author->fullname ?>" width="80" height="80" sclass="picture" />
+                    </a>
+                </div>
+                <div class="author-text">
+                    <h5 class="heading-3"><?php echo $this->articleRow->author->fullname ?></h5> <small><span>&#9733;</span> Ambassadrice</small>
+                    <p><?php echo $this->articleRow->author->abstract ?></p>
+                    <?php if (null !== $this->articleRow->author->url_blog) : ?>
+                    <a href="<?php echo $this->articleRow->author->url_blog ?>" class="more"><?php echo $this->translate('Le blog de %s', $this->articleRow->author->firstname) ?> <img src="/layouts/frontoffice/images/px.png" class="icon icon-more" height="16" width="16" /></a>
+                    <?php endif; ?>
+                </div>
+            </div> <!-- /.author -->
+
+            <div class="related">
+            <?php if (isset($this->isChild) && true === $this->isChild) : ?>
+                <?php //TODO : Dynamiser ?>
+                <div>
+                    <?php if (null !== $this->articlePrevRow) : ?>
+                    <a href="<?php echo $this->makeLink(array('headline-slug' => $this->headlineRow->slug, 'object' => $this->articlePrevRow), 'magazine_headline_get_child'); ?>"><span class="icon icon-prev-big"></span><?php echo $this->articlePrevRow->title; ?></a>
+                    <?php endif; ?>
+                </div>
+                <div>
+                    <?php if (null !== $this->articleNextRow) : ?>
+                    <a href="<?php echo $this->makeLink(array('headline-slug' => $this->headlineRow->slug, 'object' => $this->articleNextRow), 'magazine_headline_get_child'); ?>"><span class="icon icon-next-big"></span><?php echo $this->articleNextRow->title; ?></a>
+                    <?php endif; ?>
+                </div>
+            <?php else : ?>
+                <div>
+                    <?php if (null !== $this->articlePrevRow) : ?>
+                    <a href="<?php echo $this->makeLink(array('object' => $this->articlePrevRow), 'magazine_article_get'); ?>"><span class="icon icon-prev-big"></span><?php echo $this->articlePrevRow->title; ?></a>
+                    <?php endif; ?>
+                </div>
+                <div>
+                    <?php if (null !== $this->articleNextRow) : ?>
+                    <a href="<?php echo $this->makeLink(array('object' => $this->articleNextRow), 'magazine_article_get'); ?>"><span class="icon icon-next-big"></span><?php echo $this->articleNextRow->title; ?></a>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+            </div> <!-- /.related -->
+
+        </aside>
+    </article>
+</div>
+<div class="cell-3 cell-last">
+    <section class="sidebar">
+
+        <?php 
+            if (isset($this->isChild) && true === $this->isChild) {
+                //@TODO : Dynamiser
+                echo $this->partial('article/bloc/_headlineArticleList.phtml', array('headlineRow' => $this->headlineRow, 'childRowset' => $this->childRowset, 'articleRow' => $this->articleRow, 'magazineRow' => $this->magazineRow));
+            }
+        ?>
+
+        <?php if (null !== $this->appellationBlocRow) : ?>
+        <h3 class="heading-6"><?php echo $this->translate('Appelation Associé') ?></h3>
+        <div class="box-related-aoc">
+            <div class="box-inner">
+                <h3><?php echo $this->appellationBlocRow->name ?></h3>
+                <a href="<?php echo $this->appellationBlocRow->permalink ?>" class="btn btn-push btn-lower">
+                    <?php echo $this->translate('Voir la fiche AOC') ?>
+                    <img src="/layouts/frontoffice/images/px.png" class="icon icon-arrow-next" height="16" width="16" />
+                </a>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <hr />
+
+
+        <?php if (!empty($this->evenementBlocRow)) : ?>
+            <?php echo $this->partial('_partial/_evenement.phtml', array('evenementBlocRow' => $this->evenementBlocRow)) ?>
+            <hr />
+        <?php endif; ?>
+
+        <h3 class="heading-6">Actualités Rasteau</h3>
+        <ul class="news-list">
+            <li>
+                <a href="#">
+                    <img src="http://lorempixel.com/60/60/food" height="60" width="60" class="picture media-illus" />
+                    <div class="media-inner">
+                        <strong>Rasteau mon amour</strong>
+                        <small>17.03.2012</small>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://lorempixel.com/60/60/food" height="60" width="60" class="picture media-illus" />
+                    <div class="media-inner">
+                        <strong>Rasteau mon amour</strong>
+                        <small>17.03.2012</small>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="http://lorempixel.com/60/60/people" height="60" width="60" class="picture media-illus" />
+                    <div class="media-inner">
+                        <strong>Rasteau mon amour</strong>
+                        <small>17.03.2012</small>
+                    </div>
+                </a>
+            </li>
+        </ul>
+
+        <hr />
+
+    </section>
+</div>
+</div>
+
+
+
+<?php $this->placeholder('sub-footer')->captureStart(); ?>
+
+<div class="row box-proposal">
+    <div class="cell-9">
+        <?php foreach ($this->profileRowser as $profileRow) : ?>
+            <img src="<?php $profileRow->getAvatarOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => '95', 'height' => '83'))) ?>" height="83" width="95" class="picture float-left" />
+        <?php endforeach; ?>
+    </div>
+    <div class="cell-3 cell-last">
+        <h4><?php echo $this->translate('Proposez <span>Votre article</span>') ?></h4>
+        <a href="<?php echo $this->url(array(), 'ir_share_form') ?>" class="btn btn-push btn-lower">
+            <?php echo $this->translate('Envoyer un article') ?>
+            <img src="/layouts/frontoffice/images/px.png" class="icon icon-arrow-next" height="16" width="16" />
+        </a>
+    </div>
+</div>
+
+<?php $this->placeholder('sub-footer')->captureEnd(); ?>
+
+

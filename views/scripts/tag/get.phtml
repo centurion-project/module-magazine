@@ -1,0 +1,178 @@
+<?php
+$this->placeholder('body_id')->set('tmp-magazinetag');
+$this->InlineScript()->prependFile('/layouts/frontoffice/js/modules/tabs.js');
+?>
+
+<?php
+    // Navigation du magazine courant
+    $navigation = $this->getMagazineNavigation($this->magazineRow);
+    echo $this->partial('magazine/_navigation.phtml', array(
+        'magazineRow' => $this->magazineRow,
+        'navigation' => $navigation,
+        'url' => null,
+    ));
+?>
+<div class="row">
+    <div class="cell-8">
+
+            <h2 class="heading-5"><?php echo $this->translate('<span>Articles sur</span> %s', $this->tagRow->name) ?></h2>
+
+        <div class="box-highlight-article">
+            <div class="box-illus">
+                <a href="<?php echo $this->articleTopRow->permalink ?>"><img src="<?php echo $this->articleTopRow->article->getCoverOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => '640', 'height' => '300'))) ?>" class="picture"  width="640" height="300" /></a>
+            </div>
+            <h4 class="detail">Découverte</h4>
+            <h3 class="heading-5"><a href="<?php echo $this->articleTopRow->permalink ?>"><?php echo $this->articleTopRow->article->title ?></a></h3>
+            <p class="teasing-2"><?php echo $this->smartTextCrop()->simpleTextCrop($this->articleTopRow->article->body, 150) ?></p>
+            <a href="<?php echo $this->articleTopRow->permalink ?>" class="btn btn-small btn-white btn-lower">
+                <?php echo $this->translate('Lire l\'article') ?>
+                <img src="/layouts/frontoffice/images/px.png" class="icon icon-arrow-next" height="16" width="16">
+            </a>
+        </div>
+
+        <?php if (count($this->articleListRowset) > 1) : ?>
+        <h3 class="heading-6"><?php echo $this->translate('Derniers articles') ?></h3>
+
+        <ol class="box-media-list">
+            <?php foreach ($this->articleListRowset as $articleListRow) : ?>
+            <li>
+                <div class="box-media">
+                    <a href="<?php echo $articleListRow->permalink ?>" class="">
+                        <img src="<?php echo $articleListRow->article->getCoverOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => '160', 'height' => '110'))) ?>" width="160" height="110" class="picture media">
+                    </a>
+                    <div class="block">
+                        <a href="<?php echo $articleListRow->permalink ?>"><h3 class="heading-3"><?php echo $articleListRow->article->title ?></h3></a>
+                        <span class="detail"><a href="<?php echo $articleListRow->article->author->permalink ?>"><?php echo $articleListRow->article->author->fullname ?></a> |
+                            <?php
+                            $date = $articleListRow->article->getDateObjectByPublished_at();
+                            echo $this->translate('Publié le %s', str_replace('.', '/', $date->get(Zend_Date::DATE_SHORT)))
+                            ?>
+                        </span>
+                        <p><?php echo $this->getAbstract($articleListRow->article) ?><span class="dotdotdot">•••</span> </p>
+                        <a class="more" href="<?php echo $articleListRow->permalink ?>"><?php echo $this->translate('Lire la suite') ?> <img src="/layouts/frontoffice/images/px.png" width="16" height="16" class="icon icon-more"></a>
+                    </div>
+                </div>
+            </li>
+            <?php endforeach; ?>
+        </ol>
+
+        <!--<div class="btn-wrapper-big">
+            <a href="#" class="btn">
+                <?php echo $this->translate('Plus d\'articles') ?>
+                <img src="/layouts/frontoffice/images/px.png" class="icon icon-arrow-next" height="16" width="16">
+            </a>
+        </div>-->
+        <?php endif; ?>
+    </div>
+    <div class="cell-4 cell-last">
+        <section class="sidebar">
+            <?php if (!empty($this->lastHeadlineRow)) : ?>
+            <div class="box-highlight-folder">
+                <h3 class="heading-6 heading-dotted-bottom"><?php echo $this->translate('Dossier') ?></h3>
+                <a href="<?php echo $this->lastHeadlineRow->permalink ?>" class="box-illus">
+                    <figure>
+                        <img src="<?php echo $this->lastHeadlineRow->article->getPictureOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => '197', 'height' => '240'))) ?>" width="197" height="240" class="picture" />
+                        <figcaption>
+                            <?php echo $this->lastHeadlineRow->article->title ?>
+                        </figcaption>
+                    </figure>
+                </a>
+            </div>
+            <?php endif; ?>
+            <div class="tabs tabs-newslist">
+                <div class="tabs-menu">
+                    <ul>
+                        <li class="active"><a href="#tabs-1"><?php echo $this->translate('Les plus<br>consultés') ?></a></li>
+                        <li><a href="#tabs-2"><?php echo $this->translate('Derniers<br>contributeurs') ?></a></li>
+                    </ul>
+                </div>
+                <div class="tabs-content">
+                    <div class="tabs-1 active">
+                        <ul class="news-list">
+                            <?php foreach ($this->articleMostViewedRowset as $articleMostViewedRow) : ?>
+                            <li>
+                                <a href="<?php echo $articleMostViewedRow->permalink ?>">
+                                    <img src="<?php echo $articleMostViewedRow->article->getCoverOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => '60', 'height' => '60'))) ?>" height="60" width="60" class="picture media-illus" />
+                                    <div class="media-inner">
+                                        <strong><?php echo $articleMostViewedRow->article->title ?></strong>
+                                        <small>
+                                            <?php
+                                            $date = $articleMostViewedRow->article->getDateObjectByPublished_at();
+                                            echo str_replace('/', '.', $date->get(Zend_Date::DATE_SHORT));
+                                            ?>
+                                        </small>
+                                    </div>
+                                </a>
+                            </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div> <!-- /.tabs-1 -->
+                    <div class="tabs-2">
+                        <ul class="news-list">
+                            <?php foreach ($this->authorRowset as $authorRowset) : ?>
+                            <li>
+                                <a href="#">
+                                    <img src="<?php echo $authorRowset->getPictureOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => '60', 'height' => '60'))); ; ?>" height="60" width="60" class="picture media-illus" />
+                                    <div class="media-inner">
+                                        <strong><?php echo $authorRowset->fullname; ?></strong>
+                                        <small><?php echo $authorRowset->getDateObjectBy('published_at')->get('dd.MM.YYY'); ?></small>
+                                    </div>
+                                </a>
+                            </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+
+            <?php if (!empty($this->evenementBlocRow)) : ?>
+                <?php echo $this->partial('_partial/_evenement.phtml', array('evenementBlocRow' => $this->evenementBlocRow)) ?>
+                <hr />
+            <?php endif; ?>
+
+            <!--<div class="box-push-signup box-push-signup-newsletter">
+                <h3 class="heading-3">Newsletter</h3>
+                <a href="#" class="btn btn-white btn-small btn-lower">
+                    Inscrire son blog
+                    <img src="/layouts/frontoffice/images/px.png" class="icon icon-arrow-next" height="16" width="16">
+                </a>
+            </div>-->
+
+        </section>
+
+    </div>
+</div>
+
+
+<?php $this->placeholder('sub-footer')->captureStart(); ?>
+
+<div class="row">
+    <div class="cell-12">
+        <a href="<?php echo $this->url(array(), 'ir_evenement_list') ?>" class="more float-right">
+            <?php echo $this->translate('Voir l\'agenda du magazine') ?>
+            <img src="/layouts/frontoffice/images/px.png" class="icon icon-more" height="16" width="16" />
+        </a>
+        <h3 class="heading-6 heading-dotted-bottom"><?php echo $this->translate('À ne pas rater !') ?></h3>
+    </div>
+</div>
+<div class="row container-5 agenda-grid">
+    <?php foreach ($this->evenementRowset as $evenementRow) : ?>
+    <a href="<?php echo $evenementRow->permalink ?>" class="cell-1">
+        <img src="<?php echo $evenementRow->getPictureOrDefaultcoverOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => '168', 'height' => '110'))) ?>" class="picture" height="110" width="168" />
+        <h4 class="detail">
+            <?php
+                $date = new Zend_Date($evenementRow->start_at);
+                echo $date->get(Zend_Date::DATE_LONG)
+            ?>
+        </h4>
+        <h3 class="heading-8"><?php $evenementRow->name ?></h3>
+        <p><?php echo $evenementRow->subtitle ?></p>
+    </a>
+    <?php endforeach; ?>
+</div>
+
+<?php $this->placeholder('sub-footer')->captureEnd(); ?>
+
+

@@ -1,0 +1,184 @@
+<?php
+$this->placeholder('body_id')->set('tmp-magazinetag');
+$this->InlineScript()->prependFile('/layouts/frontoffice/js/modules/tabs.js');
+?>
+
+<?php $this->placeholder('sub-header')->captureStart(); ?>
+<div class="row">
+    <div class="cell-10 append-1 prepend-1 cell-last">
+        <h1 class="heading-10">All red</h1>
+    </div>
+</div>
+<?php $this->placeholder('sub-header')->captureEnd(); ?>
+
+<?php $this->placeholder('sub-header-menu')->captureStart(); ?>
+<div class="row">
+    <div class="cell-12 cell-last">
+        <nav class="inlinemenu-list">
+            <ul>
+                <li><a href="#" data-filter="*">Paroles de vignerons</a></li>
+                <li class="active"><a href="#" data-filter="red">Dossier du mois</a></li>
+                <li><a href="#" data-filter="white">Actualités et évenements</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<?php $this->placeholder('sub-header-menu')->captureEnd(); ?>
+
+<div class="row">
+    <div class="cell-8">
+        <h2 class="heading-5"><?php echo $this->translate('<span>Articles sur</span> %s', $this->tagRow->name) ?></h2>
+        <div class="box-highlight-article">
+
+            <div class="box-illus">
+                <img src="<?php echo $this->articleTopRow->getCoverOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => '640', 'height' => '300'))) ?>" class="picture"  width="640" height="300" />
+            </div>
+            <h4 class="detail">Découverte</h4>
+            <h3 class="heading-5"><?php echo $this->articleTopRow->title ?></h3>
+            <p class="teasing-2"><?php echo $this->articleTopRow->subtitle ?></p>
+            <a href="<?php echo $this->articleTopRow->permalink ?>" class="btn btn-small btn-white btn-lower">
+                <?php echo $this->translate('Lire l\'article') ?>
+                <img src="/layouts/frontoffice/images/px.png" class="icon icon-arrow-next" height="16" width="16">
+            </a>
+        </div>
+
+        <h3 class="heading-6"><?php echo $this->translate('Derniers articles') ?></h3>
+
+        <ol class="box-media-list">
+            <?php foreach ($this->articleListRowset as $articleListRow) : ?>
+            <li>
+                <div class="box-media">
+                    <a href="<?php echo $articleListRow->permalink ?>" class="">
+                        <img src="<?php echo $articleListRow->getCoverOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => '160', 'height' => '110'))) ?>" width="160" height="110" class="picture media">
+                    </a>
+                    <div class="block">
+                        <a href="#"><h3 class="heading-3"><?php echo $articleListRow->title ?></h3></a>
+                        <span class="detail"><a href="<?php echo $articleListRow->author->permalink ?>"><?php echo $articleListRow->author->fullname ?></a> |
+                            <?php
+                            $date = new Zend_Date($articleListRow->published_at);
+                            echo $this->translate('Publié le %s', str_replace('.', '/', $date->get(Zend_Date::DATE_SHORT)))
+                            ?>
+                        </span>
+                        <p><?php echo $this->getAbstract($articleListRow) ?><span class="dotdotdot">•••</span> </p>
+                    </div>
+                </div>
+            </li>
+            <?php endforeach; ?>
+        </ol>
+
+
+        <div class="btn-wrapper-big">
+            <a href="#" class="btn">
+                Plus d'articles
+                <img src="/layouts/frontoffice/images/px.png" class="icon icon-arrow-next" height="16" width="16">
+            </a>
+        </div>
+    </div>
+    <div class="cell-4 cell-last">
+        <section class="sidebar">
+            <div class="box-highlight-folder">
+                <h3 class="heading-6 heading-dotted-bottom"><?php echo $this->translate('Dossier') ?></h3>
+                <a href="<?php echo $this->lastHeadlineRow->permalink ?>" class="box-illus">
+                    <figure>
+                        <img src="<?php echo $this->lastHeadlineRow->getCoverOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => '197', 'height' => '240'))) ?>" width="197" height="240" class="picture" />
+                        <figcaption>
+                            <?php echo $this->lastHeadlineRow->title ?>
+                        </figcaption>
+                    </figure>
+                </a>
+            </div>
+            <div class="tabs tabs-newslist">
+                <div class="tabs-menu">
+                    <ul>
+                        <li><a href="#tabs-1"><?php echo $this->translate('Les plus<br>consultés') ?></a></li>
+                        <li><a href="#tabs-2"><?php echo $this->translate('Derniers<br>contributeurs') ?></a></li>
+                    </ul>
+                </div>
+                <div class="tabs-content">
+                    <div class="tabs-1">
+                        <ul class="news-list">
+                            <?php foreach ($this->articleMostViewedRowset as $articleMostViewedRow) : ?>
+                            <li>
+                                <a href="<?php echo $articleMostViewedRow->permalink ?>">
+                                    <img src="<?php echo $articleMostViewedRow->getCoverOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => '60', 'height' => '60'))) ?>" height="60" width="60" class="picture media-illus" />
+                                    <div class="media-inner">
+                                        <strong><?php echo $articleMostViewedRow->title ?></strong>
+                                        <small>
+                                            <?php
+                                            $date = new Zend_Date($articleMostViewedRow->published_at);
+                                            echo str_replace('/', '.', $date->get(Zend_Date::DATE_SHORT));
+                                            ?>
+                                        </small>
+                                    </div>
+                                </a>
+                            </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div> <!-- /.tabs-1 -->
+                    <div class="tabs-2">
+                        <ul class="news-list">
+                            <li>
+                                <a href="#">
+                                    <img src="http://lorempixel.com/60/60/food/4" height="60" width="60" class="picture media-illus" />
+                                    <div class="media-inner">
+                                        <strong>LOREM</strong>
+                                        <small>17.03.2012</small>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+
+            <?php if (!empty($this->evenementBlocRow)) : ?>
+                <?php echo $this->partial('_partial/_evenement.phtml', array('evenementBlocRow' => $this->evenementBlocRow)) ?>
+                <hr />
+            <?php endif; ?>
+
+            <div class="box-push-signup box-push-signup-newsletter">
+                <h3 class="heading-3">Newsletter</h3>
+                <a href="#" class="btn btn-white btn-small btn-lower">
+                    Inscrire son blog
+                    <img src="/layouts/frontoffice/images/px.png" class="icon icon-arrow-next" height="16" width="16">
+                </a>
+            </div>
+
+        </section>
+
+    </div>
+</div>
+
+
+<?php $this->placeholder('sub-footer')->captureStart(); ?>
+
+<div class="row">
+    <div class="cell-12">
+        <a href="<?php echo $this->url(array(), 'ir_evenement_list') ?>" class="more float-right">
+            <?php echo $this->translate('Voir l\'agenda du magazine') ?>
+            <img src="/layouts/frontoffice/images/px.png" class="icon icon-more" height="16" width="16" />
+        </a>
+        <h3 class="heading-6 heading-dotted-bottom"><?php echo $this->translate('À ne pas rater !') ?></h3>
+    </div>
+</div>
+<div class="row container-5 agenda-grid">
+    <?php foreach ($this->evenementRowset as $evenementRow) : ?>
+    <a href="<?php $evenementRow->permalink ?>" class="cell-1">
+        <img src="<?php echo $evenementRow->getCoverOrPx()->getStaticUrl(array('cropcenterresize' => array('width' => '168', 'height' => '110'))) ?>" class="picture" height="110" width="168" />
+        <h4 class="detail">
+            <?php
+                $date = new Zend_Date($evenementRow->start_at);
+                echo $date->get(Zend_Date::DATE_LONG)
+            ?>
+        </h4>
+        <h3 class="heading-8"><?php $evenementRow->name ?></h3>
+        <p><?php echo $evenementRow->subtitle ?></p>
+    </a>
+    <?php endforeach; ?>
+</div>
+
+<?php $this->placeholder('sub-footer')->captureEnd(); ?>
+
+

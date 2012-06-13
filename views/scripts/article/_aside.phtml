@@ -1,0 +1,38 @@
+<aside class="cell cell-4 cell-last">
+    <ul class="items">
+        <li class="item">
+            <h1 class="heading-3 blue"><?php echo $this->translate('Featured articles')?></h1>
+            <ul class="bullet-blue">
+                <?php foreach ($this->getPromotedPosts(array(), 3) as $key => $row) : ?>
+                <li><a href="<?php echo $this->url(array('object' => $row), 'blog_post_get'); ?>"><?php echo $row->title; ?></a></li>
+                <?php endforeach; ?>
+            </ul>   
+        </li>
+        <li class="item">
+            <h1 class="heading-3 blue"><?php echo $this->translate('Categories')?></h1>
+            <ul class="bullet-blue">
+                <?php foreach ($this->allCategoryRowset as $categoryRow) : ?>
+                <li><a href="<?php echo $this->url(array('category' => $categoryRow->slug), 'blog_post_category'); ?>"><?php echo $categoryRow->category; ?></a></li>
+                <?php endforeach; ?>
+            </ul>
+        </li>
+        <li class="item">
+            <h1 class="heading-3 blue"><?php echo $this->translate('Popular Tags')?></h1>
+            <ul class="bullet-blue">
+                <?php foreach ($this->getPopularTags(3) as $row) : ?>
+                <li><a href="<?php echo $this->url(array('tag' => $row->slug), 'blog_post_tag'); ?>"><?php echo $row->tag; ?></a></li>
+                <?php endforeach; ?>                
+            </ul>                
+        </li>
+        <li class="item">
+            <h1 class="heading-3 blue"><?php echo $this->translate('Archives')?></h1>
+            <ul class="bullet-blue">
+                <?php foreach ($this->getArchiveMonth() as $row) :
+                $dateObject = $row->getDateObjectBy('published_at');
+                ?>
+                <li><a href="<?php echo $this->url(array('year' => $dateObject->get(Zend_Date::YEAR), 'month' => $dateObject->get(Zend_Date::MONTH_NAME)), 'blog_post_archives'); ?>"><?php echo sprintf('%s %s (%u)', ucfirst($dateObject->get(Zend_Date::MONTH_NAME)), $dateObject->get(Zend_Date::YEAR), $row->_nb); ?></a></li>
+                <?php endforeach; ?>                
+            </ul>                
+        </li>
+    </ul>
+</aside>

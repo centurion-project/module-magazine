@@ -1,0 +1,61 @@
+<?php 
+$this->placeholder('body_id')->set('mag-chapter');
+$this->placeholder('body_class')->set('magazine');
+$this->noNavigation = true;
+
+if (isset($this->currentCategoryRow))
+    Centurion_Cache_TagManager::addTag($this->currentCategoryRow);
+
+if (isset($this->currentCategoryRow))
+    $this->headTitle()->prepend(strip_tags($this->currentCategoryRow->category) . ' - ');
+
+?>
+
+<p class="description rte">
+    <div class="outer-mag">
+        <div class="mag-article grid grid-w180-g10">
+            <?php if(isset($this->currentCategoryRow)): ?>
+            <div class="header-chapter">
+                <h1 class="heading-1"><?php echo $this->currentCategoryRow; ?></h1>
+                <p class="teaser-article">
+                    <?php echo $this->currentCategoryRow->description; ?>
+                </p>
+            </div>
+            <?php endif; ?>
+            <div class="mag-content">
+                <ul class="chapter-articles-list">
+                    <?php $maxKey = $this->allPostRowset->getTotalItemCount() - 1;?>
+                    <?php foreach ($this->allPostRowset as $key => $postRow) : ?>
+                        <li class="<?php echo $key == $maxKey ? 'last' : ''; ?>">
+                            <article>
+                                <header>
+                                    <h1><a href="<?php echo $this->url(array('slug' => $postRow->slug), 'magazine_post_get'); ?>"><?php echo $postRow->title; ?></a></h1>
+                                    <p class="infos"><time datetime="<?php echo $postRow->getDateObjectBy('published_at')->get('YYY-MM-dd'); ?>"></time>par <?php echo $postRow->getAuthorName(); ?></p>
+                                </header>
+                                <p><?php echo $postRow->abstract; ?></p>
+                            </article>
+                        </li>
+                    <?php endforeach; ?>                    
+                </ul>
+            </div>
+            <aside role="complementary">
+                <h2 class="box-heading-2">Les autres chapitres</h2>
+                <div class="box box-list">
+                    <ul>
+                        <?php $maxKey = $this->otherCateg->count() - 1; ?>
+                        <?php foreach($this->otherCateg as $key => $categ): ?>
+                            <li class="<?php echo $key == $maxKey ? 'last' : ''; ?>">
+                                <a href="<?php echo $this->url(array('category' => $categ->slug), 'magazine_post_list'); ?>">
+                                    <span class="icon icon-mag <?php echo $categ->icon_class; ?> icon-primary">&nbsp;</span> 
+                                    <?php echo $categ; ?> 
+                                    <span class="icon icon-arrow-bold-black icon-secondary">&nbsp;</span> 
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            </aside>
+            <div class="clear">&nbsp;</div>
+        </div>
+    </div>                
+</p>
