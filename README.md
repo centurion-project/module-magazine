@@ -1,5 +1,9 @@
 # DOCUMENTATION DU MODULE MAGAZINE
 
+!!! BE ADVICE !!!  
+!!! This module is currently in development, and is not entirely working. !!!
+
+
 ________________________________________________________________________________________________________________________
 ## [Multi-magazine]
  Table : magazine_magazine  
