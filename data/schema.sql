@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `magazine_article` (
   KEY `has_push_social` (`has_push_social`),
   KEY `has_related` (`has_related`),
   KEY `is_homepage` (`is_homepage`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=339 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -190,7 +190,7 @@ CREATE TABLE IF NOT EXISTS `magazine_author` (
   KEY `slug` (`slug`),
   KEY `user_id` (`user_id`),
   KEY `picture_id` (`picture_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=18 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -210,6 +210,8 @@ CREATE TABLE IF NOT EXISTS `magazine_category` (
   `cover_id` varchar(100) DEFAULT NULL,
   `icon_id` varchar(100) DEFAULT NULL,
   `parent_id` int(11) unsigned DEFAULT NULL,
+  `original_id` int(11) unsigned DEFAULT NULL,
+  `language_id` int(11) unsigned DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
@@ -220,7 +222,7 @@ CREATE TABLE IF NOT EXISTS `magazine_category` (
   KEY `parent_id` (`parent_id`),
   KEY `language_id` (`language_id`),
   KEY `original_id` (`original_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -238,7 +240,7 @@ CREATE TABLE IF NOT EXISTS `magazine_highlight` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_magazine_highlight_magazine_magazine1` (`magazine_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -258,7 +260,7 @@ CREATE TABLE IF NOT EXISTS `magazine_magazine` (
   PRIMARY KEY (`id`),
   KEY `slug` (`slug`),
   KEY `logo_id` (`logo_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -289,6 +291,8 @@ CREATE TABLE IF NOT EXISTS `magazine_media` (
   `description` varchar(255) DEFAULT NULL,
   `media_id` varchar(100) DEFAULT NULL,
   `author_id` int(11) unsigned DEFAULT NULL,
+  `original_id` int(11) unsigned DEFAULT NULL,
+  `language_id` int(11) unsigned DEFAULT NULL,
   `has_comment` int(1) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -307,7 +311,7 @@ CREATE TABLE IF NOT EXISTS `magazine_media` (
   KEY `original_id` (`original_id`),
   KEY `content_type_id` (`content_type_id`),
   KEY `has_comment` (`has_comment`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=133 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -333,7 +337,7 @@ CREATE TABLE IF NOT EXISTS `magazine_post` (
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -348,9 +352,13 @@ CREATE TABLE IF NOT EXISTS `magazine_tag` (
   `slug` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `original_id` int(11) unsigned DEFAULT NULL,
+  `language_id` int(11) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `slug` (`slug`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=62 ;
+  KEY `slug` (`slug`),
+  KEY `language_id` (`language_id`),
+  KEY `original_id` (`original_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
